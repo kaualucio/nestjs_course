@@ -14,10 +14,7 @@ export class AddressEntity {
   @Column({ name: 'user_id', nullable: false })
   userId: number;
 
-  @Column({ name: 'name', nullable: false })
-  name: string;
-
-  @Column({ name: 'number_address', nullable: false })
+  @Column({ name: 'number', nullable: false })
   number_address: number;
 
   @Column({ name: 'cep', nullable: false })
