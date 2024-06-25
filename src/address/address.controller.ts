@@ -11,6 +11,8 @@ import { AddressService } from './address.service';
 import { AddressEntity } from './entities/address.entity';
 import { UserService } from 'src/user/user.service';
 import { CityService } from 'src/city/city.service';
+import { Roles } from '../decorators/roles.decorator';
+import { UserType } from '../user/enums/user-type.enum';
 
 @Controller('address')
 export class AddressController {
@@ -21,6 +23,7 @@ export class AddressController {
   ) {}
 
   @Post('/:userId')
+  @Roles(UserType.User)
   @UsePipes(ValidationPipe)
   async createAddress(
     @Body() createAddressDto: CreateAddressDto,
