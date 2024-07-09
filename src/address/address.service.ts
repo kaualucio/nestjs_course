@@ -3,21 +3,42 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { AddressEntity } from './entities/address.entity';
 import { Repository } from 'typeorm';
 import { CreateAddressDto } from './dtos/createAddress.dto';
+import { CityService } from '../city/city.service';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AddressService {
   constructor(
     @InjectRepository(AddressEntity)
     private readonly addressRepository: Repository<AddressEntity>,
+    private readonly userService: UserService,
+    private readonly cityService: CityService,
   ) {}
 
   async createAddress(
-    createAddress: CreateAddressDto,
+    createAddressDto: CreateAddressDto,
     userId: number,
   ): Promise<AddressEntity> {
+    await this.userService.findUserById(userId);
+    await this.cityService.findCityById(createAddressDto.city_id);
     return this.addressRepository.save({
-      ...createAddress,
+      ...createAddressDto,
       userId,
     });
+  }
+
+  async findAddressByUserId(userId: number): Promise<AddressEntity[]> {
+    const addresses = await this.addressRepository.find({
+      where: {
+        userId,
+      },
+      relations: {
+        city: {
+          state: true,
+        },
+      },
+    });
+
+    return addresses;
   }
 }

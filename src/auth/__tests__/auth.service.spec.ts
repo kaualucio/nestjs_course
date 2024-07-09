@@ -1,12 +1,11 @@
-import { Test, TestingModule } from '@nestjs/testing';
-// import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { AuthService } from '../auth.service';
-import { UserService } from '../../user/user.service';
 import { JwtService } from '@nestjs/jwt';
+import { Test, TestingModule } from '@nestjs/testing';
+import { ReturnUserDto } from '../../user/dtos/returnUser.dto';
+import { UserService } from '../../user/user.service';
 import { userEntityMock } from '../../user/__mocks__/user.mock';
+import { AuthService } from '../auth.service';
 import { jwtMock } from '../__mocks__/jwt.mock';
 import { loginUserMock } from '../__mocks__/login-user.mock';
-import { ReturnUserDto } from '../../user/dtos/returnUser.dto';
 import { NotFoundException } from '@nestjs/common';
 
 describe('AuthService', () => {
@@ -36,12 +35,12 @@ describe('AuthService', () => {
     userService = module.get<UserService>(UserService);
   });
 
-  it('should be defined', async () => {
+  it('should be defined', () => {
     expect(service).toBeDefined();
     expect(userService).toBeDefined();
   });
 
-  it('should be return user if password and email are valid', async () => {
+  it('should return user if password and email valid', async () => {
     const user = await service.login(loginUserMock);
 
     expect(user).toEqual({
@@ -50,19 +49,19 @@ describe('AuthService', () => {
     });
   });
 
-  it('should be return an error if password invalid', async () => {
+  it('should return user if password invalid and email valid', async () => {
     expect(
-      service.login({ ...loginUserMock, password: '789456' }),
+      service.login({ ...loginUserMock, password: '4324' }),
     ).rejects.toThrow(NotFoundException);
   });
 
-  it('should be return an error if email doesnt exists', async () => {
+  it('should return user if email not exist', async () => {
     jest.spyOn(userService, 'findUserByEmail').mockResolvedValue(undefined);
 
     expect(service.login(loginUserMock)).rejects.toThrow(NotFoundException);
   });
 
-  it('should be return an error if something went wrong in UserService', async () => {
+  it('should return error in UserService', async () => {
     jest.spyOn(userService, 'findUserByEmail').mockRejectedValue(new Error());
 
     expect(service.login(loginUserMock)).rejects.toThrow(Error);
