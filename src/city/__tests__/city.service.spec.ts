@@ -44,7 +44,7 @@ describe('CityService', () => {
   });
 
   it('should return a city by cityId', async () => {
-    const city = await service.findeCityById(cityMock.id);
+    const city = await service.findCityById(cityMock.id);
 
     expect(city).toEqual(cityMock);
   });
@@ -52,7 +52,7 @@ describe('CityService', () => {
   it('should return an error if city doesnt exists', async () => {
     jest.spyOn(cityRepository, 'findOne').mockResolvedValue(undefined);
 
-    expect(service.findeCityById(cityMock.id)).rejects.toThrow(
+    expect(service.findCityById(cityMock.id)).rejects.toThrow(
       NotFoundException,
     );
   });
